@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_151">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v8.0 (3)">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.web"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="C:/Users/Guillaume Gingembre/Documents/GoIT/Java6/Hard Skills/Java Developer/Module 4 HTTP/apache-tomcat-8.5.20/lib/catalina.jar" sourcepath="C:/Users/Guillaume Gingembre/Documents/GoIT/Java6/Hard Skills/Java Developer/Module 4 HTTP/apache-tomcat-8.5.20-src.zip"/>
+	<classpathentry kind="lib" path="C:/Users/Guillaume Gingembre/Documents/GoIT/Java6/Hard Skills/Java Developer/Module 4 HTTP/apache-tomcat-8.5.20/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Guillaume Gingembre/Downloads/mysql-connector-java-5.1.44.zip">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

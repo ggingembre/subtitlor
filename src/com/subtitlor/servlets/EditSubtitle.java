@@ -122,6 +122,7 @@ public class EditSubtitle extends HttpServlet {
 		
 		request.setAttribute("originalfile", file);
 		request.setAttribute("language", language);
+		request.setAttribute("arraylength", translations.size());
 		
 		this.getServletContext().getRequestDispatcher("/edit_subtitle.jsp").forward(request, response);
 		

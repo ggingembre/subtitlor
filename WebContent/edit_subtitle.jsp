@@ -11,12 +11,13 @@
         <input type="submit" style="position:fixed; top: 10px; right: 10px;" />
         <input type="hidden" name="originalfile" id="originalfile" value="${originalfile}" />
         <input type="hidden" name="language" id="language" value="${language}" />
+        <input type="hidden" name="arraylength" id="arraylength" value="${arraylength}" />
         
         <table>
 	        <c:forEach items="${ subtitles }" var="subtitle" varStatus="loop">
 	        	<tr>
 	        		<td style="text-align:right;"><c:out value="${ subtitle }" /></td>
-	        		<td><input type="text" value="${ translation [loop.index] }" name="${ translation [loop.index] }" size="35" /></td>
+	        		<td><input type="text" value="${ translation [loop.index] }" name="translation_${loop.index}" size="35" /></td>
 	        	</tr>
 	    	</c:forEach>
 	    </table>

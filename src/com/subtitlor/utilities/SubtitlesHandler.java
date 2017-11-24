@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 
@@ -199,6 +200,50 @@ public class SubtitlesHandler {
 		}
 		
 		return lines; 
+		
+	}
+	
+	public void saveTranslationUpdate (String file, String language, HashMap<Integer, String> translations, TranslationDao translationDao) {
+		
+		Translation translation = new Translation();
+		
+		System.out.println("now in saving translation updates");
+		System.out.println("translations size: " + translations.size());
+		
+		// getting number of translation objects
+		
+		int count = translationDao.count(file, language);
+		
+		System.out.println("Number of translation objects: " + count);
+		
+		for ( int i = 1, j = 0; i <= count; i++, j++) {
+			
+			// get translation object
+			
+			System.out.println("index is " + i);
+			System.out.println("file is " + file);
+			System.out.println("language is " + language);
+			
+			translation = translationDao.getOneTranslation(i, file, Language.valueOf(language));
+			System.out.println("translation object in handler: " + translation);
+			
+			// update line 1
+			translation.setTranslatedLineOne(translations.get(j));
+			
+			// update line 2 if there is a line 2
+			if (translation.getTranslatedLineTwo() != null) {
+				j = j + 1;
+				translation.setTranslatedLineTwo(translations.get(j));
+			}
+			
+			// save object to DB
+			translationDao.update(translation);
+			
+			// reinitialize object
+			translation = new Translation();
+			
+		}
+		
 		
 	}
 	

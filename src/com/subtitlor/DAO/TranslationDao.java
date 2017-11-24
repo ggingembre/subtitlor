@@ -12,7 +12,8 @@ public interface TranslationDao {
     Translation getOneTranslation(long id, String fileName, Language language);
     ArrayList<Translation> getTranslations(String fileName, Language language);
     ArrayList<Translation> listAll();
-    void update(long id, Translation translation);
+    void update(Translation translation);
     void delete(String pathName);
+    int count(String fileName, String language);
 
 }

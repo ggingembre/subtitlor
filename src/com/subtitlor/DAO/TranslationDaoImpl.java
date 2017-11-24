@@ -164,11 +164,66 @@ public class TranslationDaoImpl implements TranslationDao {
         }
         return translations;
 	}
+	
+	@Override
+	public int count(String fileName, String language) {
+		
+		int count = 0;
+		
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+        ResultSet resultat = null;
+
+        
+        	try {
+			connexion = daoFactory.getConnection();
+            preparedStatement = connexion.prepareStatement("SELECT COUNT(*) AS NumberOfLines FROM translations where filename = ? AND langue= ? ;");
+            preparedStatement.setString(1, fileName);
+            preparedStatement.setString(2, language.toString());
+            
+            System.out.println(preparedStatement.toString());
+            
+            resultat = preparedStatement.executeQuery();
+            
+            while (resultat.next()) {
+            	count = Integer.parseInt(resultat.getString("NumberOfLines"));
+            }
+            
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		return count;
+	}
 
 	@Override
-	public void update(long id, Translation translation) {
-		// TODO Auto-generated method stub
+	public void update(Translation translation) {
 		
+		System.out.println("Now in update translation");
+		
+		Connection connexion = null;
+		PreparedStatement preparedStatement = null;
+		
+		System.out.println("translation object is: " + translation.toString());
+		System.out.println("language is: " + translation.getLanguage().toString());
+		
+		try {
+			connexion = daoFactory.getConnection();
+            preparedStatement = connexion.prepareStatement("UPDATE translations SET translatedlineone = ? , translatedlinetwo = ? WHERE id = ? and filename = ? and langue =?;");
+            preparedStatement.setString(1, translation.getTranslatedLineOne());
+            preparedStatement.setString(2, translation.getTranslatedLineTwo());
+            preparedStatement.setLong(3, translation.getId());
+            preparedStatement.setString(4, translation.getFileName());
+            preparedStatement.setString(5, translation.getLanguage().toString());
+            
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 	@Override

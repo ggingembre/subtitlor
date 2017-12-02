@@ -57,14 +57,10 @@ public class Translate extends HttpServlet {
 		int arraySize = Integer.parseInt(request.getParameter("arraylength"));
 		HashMap<Integer, String> translations = new HashMap<Integer, String>();
 		SubtitlesHandler handler = new SubtitlesHandler();
-		Translation translation = new Translation();
 		
 		System.out.println(language);
 		System.out.println(file);
 		System.out.println(arraySize);
-		System.out.println(request.getParameter("translation_1"));
-		System.out.println(request.getParameter("translation_2"));
-		System.out.println(request.getParameter("translation_3"));
 		
 		// create string array of translations
 		for (int i = 0; i < arraySize; i++){
@@ -77,9 +73,10 @@ public class Translate extends HttpServlet {
 		handler.saveTranslationUpdate(file, language, translations, translationDao);
 		
 		// show confirmation page
+		request.setAttribute("originalfile", file);
+		request.setAttribute("language", language);
 		this.getServletContext().getRequestDispatcher("/translate.jsp").forward(request, response);
 		
-
 	}
 
 }

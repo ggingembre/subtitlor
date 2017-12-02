@@ -1,15 +1,9 @@
 package com.subtitlor.utilities;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.servlet.ServletException;
-
-import com.subtitlor.DAO.DaoFactory;
 import com.subtitlor.DAO.OriginalDao;
 import com.subtitlor.DAO.TranslationDao;
 import com.subtitlor.beans.Language;
@@ -243,39 +237,82 @@ public class SubtitlesHandler {
 			translation = new Translation();
 			
 		}
-		
-		
+			
 	}
 	
-	
-	/*private ArrayList<Original> originalSubtitles = null;
-	private ArrayList<Translation> translatedSubtitles = null;
-	private int count;
-	
-	public SubtitlesHandler (String fileName) {
-		originalSubtitles = new ArrayList<Original>();
-		translatedSubtitles = new ArrayList<Translation>();
-		
-		
-		BufferedReader br;
-		try {
-			br = new BufferedReader(new FileReader(fileName));
-			String line;
-			while ((line = br.readLine()) != null) {
-				
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		
-	}*/
-	
-	
+
 	public ArrayList<String> getSubtitles() {
 		return originalSubtitles;
 	}
+	
+	public ArrayList<String> toText(String filePath, String file, TranslationDao translationDao, String language) {
+		// writes translation objects to file
+		System.out.println("now in toText");
+		System.out.println(filePath);
+		
+		ArrayList<Translation> translations = new ArrayList<Translation>();
+		Writer output = null;
+		File translatedFile = null;
+		
+		try {
+			
+			translatedFile = new File(filePath);
+			
+			// if file doesn't exists, then create it
+			if (!translatedFile.exists()) {
+				System.out.println("now created file" + filePath);
+				translatedFile.createNewFile();
+						}
+			
+			output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(translatedFile, false), "UTF-8"));
+			
+			int count = translationDao.count(file, language);
+			
+			System.out.println("Number of translation objects: " + count);
+			
+			// get all translation objects
+			
+			translations = translationDao.getTranslations(file, Language.valueOf(language));
+			
+			System.out.println("query result size: " + translations.size());
+			
+			// write them to file
+			
+			for (Translation t : translations) {
+				
+				output.write(String.valueOf(t.getId()) + System.getProperty("line.separator"));
+				output.write(t.getTimeStamp());
+				((BufferedWriter) output).newLine();
+				output.write(t.getTranslatedLineOne());
+				((BufferedWriter) output).newLine();
+				if (t.getTranslatedLineTwo() != null) {
+					output.write(t.getTranslatedLineTwo());
+					((BufferedWriter) output).newLine();
+				}
+				
+				((BufferedWriter) output).newLine();
+				output.flush();
+				
+			}
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			
+			try {
+
+				if (output != null)
+					output.close();
+
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		return originalSubtitles;
+	
+	} 
 	
 	public boolean isSubtitle (String string) {
 		

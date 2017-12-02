@@ -13,8 +13,38 @@
     <servlet-name>EditSubtitle</servlet-name>
     <servlet-class>com.subtitlor.servlets.EditSubtitle</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>Translate</servlet-name>
+    <servlet-class>com.subtitlor.servlets.Translate</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>WriteToFile</servlet-name>
+    <servlet-class>com.subtitlor.servlets.WriteToFile</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Upload</servlet-name>
+    <servlet-class>com.subtitlor.servlets.Upload</servlet-class>
+       	<multipart-config>
+            <location>C:\Users\Guillaume Gingembre\IdeaProjects\UploadFormExample\src\com\octest\resources\temp\</location> <!-- dossier temporaire de stockage -->
+            <max-file-size>10485760</max-file-size> <!-- 10Mo (en octet) -->
+            <max-request-size>52428800</max-request-size> <!-- 5*10Mo (ensemble de toutes les données du formulaire-->
+            <file-size-threshold>1048576</file-size-threshold> <!-- 1Mo (à partir de quelle taill on doit stocker les fichiers dans ce dossier-->
+        </multipart-config>
+  </servlet>
   <servlet-mapping>
     <servlet-name>EditSubtitle</servlet-name>
     <url-pattern>/edit</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Translate</servlet-name>
+    <url-pattern>/translate</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>WriteToFile</servlet-name>
+    <url-pattern>/tofile</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Upload</servlet-name>
+    <url-pattern>/upload/*</url-pattern>
   </servlet-mapping>
 </web-app>

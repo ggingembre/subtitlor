@@ -46,8 +46,11 @@ public class TranslationDaoImpl implements TranslationDao {
                 translation.setTranslatedLineTwo(translatedlinetwo);
                 translation.setLanguage(language);
                 translation.setOriginal(original);
-               
             }
+            
+            statement.close();
+            connection.close();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -189,6 +192,9 @@ public class TranslationDaoImpl implements TranslationDao {
             	count = Integer.parseInt(resultat.getString("NumberOfLines"));
             }
             
+            preparedStatement.close();
+            connexion.close();
+            
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -219,6 +225,7 @@ public class TranslationDaoImpl implements TranslationDao {
             
             preparedStatement.executeUpdate();
             preparedStatement.close();
+            connexion.close();
             
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

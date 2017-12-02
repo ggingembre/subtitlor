@@ -11,7 +11,7 @@
 
 <body>
     <h2>Welcome to our page to translate subtitles!</h2>
-    <a href="/Subtitlor/upload">Click here to upload a new file</a>
+    <a href="/Subtitlor/Upload">Click here to upload a new file</a>
     <a href="/Subtitlor/EditSubtitle">Click here to edit subtitle</a>
     
     <br>

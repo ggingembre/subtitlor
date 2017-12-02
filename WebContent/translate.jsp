@@ -10,8 +10,11 @@
 
 <p>You have successfully saved your translation!</p> 
 
-
-
+<form method="post" action="/Subtitlor/WriteToFile">    
+        <input type="submit" value="Download Translation to File" style="position:fixed; top: 10px; right: 10px;" />
+        <input type="hidden" name="originalfile" id="originalfile" value="${originalfile}" />
+        <input type="hidden" name="language" id="language" value="${language}" />
+</form>
     
 </body>
 </html> 

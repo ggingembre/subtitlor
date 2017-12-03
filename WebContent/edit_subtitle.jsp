@@ -8,10 +8,12 @@
 </head>
 <body>
     <form method="post" action="/Subtitlor/Translate">    
-        <input type="submit" style="position:fixed; top: 10px; right: 10px;" />
+        <input type="submit" value="save translation" style="position:fixed; top: 10px; right: 10px;" onclick="document.getElementById('loader').style.display = 'block';" />
         <input type="hidden" name="originalfile" id="originalfile" value="${originalfile}" />
         <input type="hidden" name="language" id="language" value="${language}" />
         <input type="hidden" name="arraylength" id="arraylength" value="${arraylength}" />
+        
+        <img id="loader" src="ajax-loader.gif" path="/Subtitlor/WebContent/ajax-loader.gif" style="display: none; position: fixed; top: 50%; right: 50%" />
         
         <table>
 	        <c:forEach items="${ subtitles }" var="subtitle" varStatus="loop">

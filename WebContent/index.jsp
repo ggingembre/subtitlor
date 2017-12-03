@@ -11,7 +11,7 @@
 
 <body>
     <h2>Welcome to our page to translate subtitles!</h2>
-    <a href="/Subtitlor/Upload">Click here to upload a new file</a>
+    <a href="/Subtitlor/upload.jsp">Click here to upload a new file</a>
     <a href="/Subtitlor/EditSubtitle">Click here to edit subtitle</a>
     
     <br>
@@ -49,7 +49,8 @@
 				</select> 
 				</div>
 				<div>
-				<input type="submit" value="Translate"/>
+				<input type="submit" value="Translate" onclick="document.getElementById('loader').style.display = 'block';"/>
+				<img id="loader" src="ajax-loader.gif" path="/Subtitlor/WebContent/ajax-loader.gif" style="display: none; position: fixed; top: 50%; right: 50%" />
 				</div>      
     			 
 			</section>

@@ -1,29 +1,33 @@
 package com.subtitlor.servlets;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.List;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  * Servlet implementation class Upload
  */
 @WebServlet("/Upload")
-@MultipartConfig
 public class Upload extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 
-    public static final int TAILLE_TAMPON = 10240;
+	private static final long serialVersionUID = 1L;
+	 
+    private static final String UPLOAD_DIRECTORY = "upload";
+    private static final int THRESHOLD_SIZE     = 1024 * 1024 * 3;  // 3MB
+    private static final int MAX_FILE_SIZE      = 1024 * 1024 * 40; // 40MB
+    private static final int MAX_REQUEST_SIZE   = 1024 * 1024 * 50; // 50MB
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -32,8 +36,8 @@ public class Upload extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
-	/**
+    
+    /**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,73 +46,75 @@ public class Upload extends HttpServlet {
         
 	}
 
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		// On récupère le champ description comme d'habitude
-        String description = request.getParameter("description");
-        request.setAttribute("description", description );
 
-        // On récupère le champ du fichier
-        Part part = request.getPart("fichier");
-        
-        ServletContext context = getServletContext();
-		String CHEMIN_FICHIERS = context.getRealPath("/WEB-INF/originals/");
+		String message = null;
 		
-		System.out.println("chemin fichisers: " + CHEMIN_FICHIERS); 
-        
-        // On vérifie qu'on a bien reçu un fichier
-        String nomFichier = getNomFichier(part);
+	        // checks if the request actually contains upload file
+	        if (!ServletFileUpload.isMultipartContent(request)) {
+	            PrintWriter writer = response.getWriter();
+	            writer.println("Request does not contain upload data");
+	            writer.flush();
+	            return;
+	        }
+	         
+	        // configures upload settings
+	        DiskFileItemFactory factory = new DiskFileItemFactory();
+	        factory.setSizeThreshold(THRESHOLD_SIZE);
+	        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
+	         
+	        ServletFileUpload upload = new ServletFileUpload(factory);
+	        upload.setFileSizeMax(MAX_FILE_SIZE);
+	        upload.setSizeMax(MAX_REQUEST_SIZE);
+	         
+	        // constructs the directory path to store upload file
+	        String uploadPath = getServletContext().getRealPath("/WEB-INF/originals/");
+	        
+	        //String uploadPath = getServletContext().getRealPath("")
+	        //    + File.separator + UPLOAD_DIRECTORY;
+	        // creates the directory if it does not exist
+	        System.out.println("upload path is: " + uploadPath);
+	        File uploadDir = new File(uploadPath);
+	        if (!uploadDir.exists()) {
+	            uploadDir.mkdir();
+	        }
+	         
+	        try {
+	            // parses the request's content to extract file data
+	            List formItems = upload.parseRequest(request);
+	            Iterator iter = formItems.iterator();
+	             
+	            // iterates over form's fields
+	            while (iter.hasNext()) {
+	                FileItem item = (FileItem) iter.next();
+	                // processes only fields that are not form fields
+	                if (!item.isFormField()) {
+	                    String fileName = new File(item.getName()).getName();
+	                    String filePath = uploadPath + File.separator + fileName;
+	                    File storeFile = new File(filePath);
+	                     
+	                    // saves the file on disk
+	                    item.write(storeFile);
+	                    
+	                    // write success message
+	                    message = "Upload successful! Your file '" + fileName + "' has been saved to local directory " + filePath;
+	                    
+	                }
+	             
+	            }
+	            
+	            request.setAttribute("message", message) ;
+	        } catch (Exception ex) {
+	            request.setAttribute("message", "There was an error: " + ex.getMessage());
+	        }
+	        
+	        getServletContext().getRequestDispatcher("/message.jsp").forward(request, response);
 
-        // Si on a bien un fichier
-        if (nomFichier != null && !nomFichier.isEmpty()) {
-            String nomChamp = part.getName();
-            // Corrige un bug du fonctionnement d'Internet Explorer
-             nomFichier = nomFichier.substring(nomFichier.lastIndexOf('/') + 1)
-                    .substring(nomFichier.lastIndexOf('\\') + 1);
-
-            // On écrit définitivement le fichier sur le disque
-            ecrireFichier(part, nomFichier, CHEMIN_FICHIERS);
-
-            request.setAttribute(nomChamp, nomFichier);
-        }
-
-        this.getServletContext().getRequestDispatcher("/upload.jsp").forward(request, response);
-    }
-
-    private void ecrireFichier( Part part, String nomFichier, String chemin ) throws IOException {
-        BufferedInputStream entree = null;
-        BufferedOutputStream sortie = null;
-        try {
-            entree = new BufferedInputStream(part.getInputStream(), TAILLE_TAMPON);
-            sortie = new BufferedOutputStream(new FileOutputStream(new File(chemin + nomFichier)), TAILLE_TAMPON);
-
-            byte[] tampon = new byte[TAILLE_TAMPON];
-            int longueur;
-            while ((longueur = entree.read(tampon)) > 0) {
-                sortie.write(tampon, 0, longueur);
-            }
-        } finally {
-            try {
-                sortie.close();
-            } catch (IOException ignore) {
-            }
-            try {
-                entree.close();
-            } catch (IOException ignore) {
-            }
-        }
-    }
-    
-    private static String getNomFichier( Part part ) {
-        for ( String contentDisposition : part.getHeader( "content-disposition" ).split( ";" ) ) {
-            if ( contentDisposition.trim().startsWith( "filename" ) ) {
-                return contentDisposition.substring( contentDisposition.indexOf( '=' ) + 1 ).trim().replace( "\"", "" );
-            }
-        }
-        return null;
-    }   
+	}
+	
 }
 

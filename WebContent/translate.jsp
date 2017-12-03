@@ -15,6 +15,13 @@
         <input type="hidden" name="originalfile" id="originalfile" value="${originalfile}" />
         <input type="hidden" name="language" id="language" value="${language}" />
 </form>
+
+    <br>
+   <br>
+   
+   <center>
+    <a href="/Subtitlor/EditSubtitle">Back to home</a>
+   </center>
     
 </body>
 </html> 

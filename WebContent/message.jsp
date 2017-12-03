@@ -5,15 +5,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>File Upload</title>
+<title>Upload</title>
 </head>
 <body>
     <center>
-        <form method="post" action="/Subtitlor/Upload" enctype="multipart/form-data">
-            Select file to upload: <input type="file" name="uploadFile" />
-            <br/><br/>
-            <input type="submit" value="Upload" />
-        </form>
+        <h4>${requestScope.message}</h4>
     </center>
+    
+    <br>
+   <br>
+   
+   <center>
+    <a href="/Subtitlor/EditSubtitle">Back to home</a>
+    <a href="/Subtitlor/upload.jsp">Upload another file</a>
+   </center>
+     
 </body>
 </html>
